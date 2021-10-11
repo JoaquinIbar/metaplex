@@ -2,8 +2,6 @@ import { Layout } from 'antd';
 import React from 'react';
 import { useStore } from '@oyster/common';
 import { useMeta } from '../../contexts';
-import { AuctionListView } from './auctionList';
-import { SetupView } from './setup';
 
 export const HomeView = () => {
   const { isLoading, store } = useMeta();
@@ -13,7 +11,7 @@ export const HomeView = () => {
 
   return (
     <Layout style={{ margin: 0, marginTop: 30, alignItems: 'center' }}>
-      {showAuctions ? <AuctionListView /> : <SetupView />}
+      <h1> ESTO ES LA FUCKING HOME </h1>
     </Layout>
   );
 };
