@@ -17,8 +17,11 @@ export const HomeView = () => {
       <Content>
         <Row>
           <Col>
-          
-                    </Col>
+            <video playsInline autoPlay muted loop>
+                <source src="https://github.com/JoaquinIbar/solmoments/raw/4d273cce40448ecf59e7ebd1b9ebab6d39365fcf/js/packages/web/public/videos/remember-solmoments.mp4" 
+                  type='video/mp4;'/>
+              </video>
+          </Col>
           <Col>
 
           </Col>
