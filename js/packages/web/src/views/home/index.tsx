@@ -1,4 +1,4 @@
-import { Col, Layout, Row} from 'antd';
+import { Col, Layout, Row } from 'antd';
 import React from 'react';
 import { useStore } from '@oyster/common';
 import { useMeta } from '../../contexts';
@@ -16,10 +16,12 @@ export const HomeView = () => {
       <Content>
         <Row>
           <Col>
-            <video playsInline autoPlay muted loop>
-                <source src="https://github.com/JoaquinIbar/solmoments/raw/4d273cce40448ecf59e7ebd1b9ebab6d39365fcf/js/packages/web/public/videos/remember-solmoments.mp4" 
-                  type='video/mp4;'/>
-              </video>
+            <video class="desktop-video" playsInline autoPlay muted loop>
+              <source src="https://github.com/JoaquinIbar/solmoments/raw/master/js/packages/web/public/videos/remember-solmoments.mp4" type='video/mp4;' />
+            </video>
+            <video class="mobile-video" playsInline autoPlay muted loop>
+              <source src="https://github.com/JoaquinIbar/solmoments/raw/master/js/packages/web/public/videos/remember-solmoments-mobile.mp4" type='video/mp4;' />
+            </video>
           </Col>
         </Row>
       </Content>

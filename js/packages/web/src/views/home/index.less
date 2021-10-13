@@ -1,3 +1,12 @@
+video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 section.ant-layout {
   width: 100%;
   margin: auto;
@@ -54,6 +63,9 @@ a:active {
   margin-bottom: 30px;
 }
 
+.mobile-video{
+  display: none;
+}
 /* Optional, different gutter size on mobile */
 @media (max-width: 800px) {
   .my-masonry-grid {
@@ -65,17 +77,14 @@ a:active {
   .my-masonry-grid_column > div {
     margin-bottom: 15px; /* space between items */
   }
+  .desktop-video{
+    display: none;
+  }
+  .mobile-video{
+    display: grid;
+  }
 }
 
 .ant-card-body {
   padding: 0;
-}
-
-video {
-  object-fit: cover;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
 }
