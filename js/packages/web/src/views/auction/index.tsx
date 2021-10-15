@@ -26,7 +26,6 @@ import {
   AuctionState,
   StringPublicKey,
   toPublicKey,
-  useMeta,
 } from '@oyster/common';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { MintInfo } from '@solana/spl-token';
@@ -35,7 +34,7 @@ import useWindowDimensions from '../../utils/layout';
 import { CheckOutlined } from '@ant-design/icons';
 import { useMemo } from 'react';
 import { ArtType } from '../../types';
-import { ClickToCopy } from '../../components/ClickToCopy';
+import { ClickToCopy  } from '../../components/ClickToCopy';
 
 export const AuctionItem = ({
   item,
@@ -83,10 +82,7 @@ export const AuctionView = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const art = useArt(auction?.thumbnail.metadata.pubkey);
   const { ref, data } = useExtendedArt(auction?.thumbnail.metadata.pubkey);
-  const { pullAuctionPage } = useMeta();
-  useEffect(() => {
-    pullAuctionPage(id);
-  }, []);
+  const creators = useCreators(auction);
   let edition = '';
   if (art.type === ArtType.NFT) {
     edition = 'Unique';
@@ -336,24 +332,18 @@ const BidLine = (props: {
             address={bidder}
           />{' '}
           {bidderTwitterHandle ? (
-            <Row className="pubkey-row">
+            <Row className="pubkey-row"> 
               <a
                 target="_blank"
                 title={shortenAddress(bidder)}
                 href={`https://twitter.com/${bidderTwitterHandle}`}
               >{`@${bidderTwitterHandle}`}</a>
-              <ClickToCopy
-                className="copy-pubkey"
-                copyText={bidder as string}
-              />
+              <ClickToCopy className="copy-pubkey" copyText={bidder as string} />
             </Row>
           ) : (
-            <Row className="pubkey-row">
+            <Row className="pubkey-row"> 
               {shortenAddress(bidder)}
-              <ClickToCopy
-                className="copy-pubkey"
-                copyText={bidder as string}
-              />
+              <ClickToCopy className="copy-pubkey" copyText={bidder as string} />
             </Row>
           )}
           {isme && <span style={{ color: '#6479f6' }}>&nbsp;(you)</span>}

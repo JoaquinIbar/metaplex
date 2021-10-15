@@ -135,7 +135,7 @@ export interface AuctionState {
 export const AuctionCreateView = () => {
   const connection = useConnection();
   const wallet = useWallet();
-  const { whitelistedCreatorsByCreator, storeIndexer } = useMeta();
+  const { whitelistedCreatorsByCreator } = useMeta();
   const { step_param }: { step_param: string } = useParams();
   const history = useHistory();
   const mint = useMint(QUOTE_MINT);
@@ -143,14 +143,15 @@ export const AuctionCreateView = () => {
 
   const [step, setStep] = useState<number>(0);
   const [stepsVisible, setStepsVisible] = useState<boolean>(true);
-  const [auctionObj, setAuctionObj] = useState<
-    | {
-        vault: StringPublicKey;
-        auction: StringPublicKey;
-        auctionManager: StringPublicKey;
-      }
-    | undefined
-  >(undefined);
+  const [auctionObj, setAuctionObj] =
+    useState<
+      | {
+          vault: StringPublicKey;
+          auction: StringPublicKey;
+          auctionManager: StringPublicKey;
+        }
+      | undefined
+    >(undefined);
   const [attributes, setAttributes] = useState<AuctionState>({
     reservationPrice: 0,
     items: [],
@@ -494,7 +495,6 @@ export const AuctionCreateView = () => {
       safetyDepositDrafts,
       participationSafetyDepositDraft,
       QUOTE_MINT.toBase58(),
-      storeIndexer,
     );
     setAuctionObj(_auctionObj);
   };

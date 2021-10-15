@@ -27,11 +27,7 @@ import { settle } from '../../actions/settle';
 import { startAuctionManually } from '../../actions/startAuctionManually';
 import { QUOTE_MINT } from '../../constants';
 import { useMeta } from '../../contexts';
-import {
-  AuctionViewState,
-  processAccountsIntoAuctionView,
-  useAuctions,
-} from '../../hooks';
+import { AuctionViewState, useAuctions } from '../../hooks';
 
 interface NotificationCard {
   id: string;
@@ -185,28 +181,23 @@ export function useSettlementAuctions({
 }) {
   const { accountByMint } = useUserAccounts();
   const walletPubkey = wallet?.publicKey?.toBase58();
-  const { bidderPotsByAuctionAndBidder, pullAuctionPage } = useMeta();
-  const auctionsNeedingSettling = [
-    ...useAuctions(AuctionViewState.Ended),
-    ...useAuctions(AuctionViewState.BuyNow),
-  ];
+  const { bidderPotsByAuctionAndBidder } = useMeta();
+  const auctionsNeedingSettling = [...useAuctions(AuctionViewState.Ended), ...useAuctions(AuctionViewState.BuyNow)];
 
   const [validDiscoveredEndedAuctions, setValidDiscoveredEndedAuctions] =
     useState<Record<string, number>>({});
   useMemo(() => {
     const f = async () => {
       const nextBatch = auctionsNeedingSettling
-        .filter(a => {
-          const isEndedInstantSale =
-            a.isInstantSale &&
-            a.items.length === a.auction.info.bidState.bids.length;
+        .filter(
+          a => {
+            const isEndedInstantSale = a.isInstantSale && a.items.length === a.auction.info.bidState.bids.length;
 
-          return (
-            walletPubkey &&
+           return walletPubkey &&
             a.auctionManager.authority === walletPubkey &&
-            (a.auction.info.ended() || isEndedInstantSale)
-          );
-        })
+             (a.auction.info.ended() || isEndedInstantSale)
+          }
+        )
         .sort(
           (a, b) =>
             (b.auction.info.endedAt?.toNumber() || 0) -
@@ -282,58 +273,18 @@ export function useSettlementAuctions({
         ),
         action: async () => {
           try {
-            // pull missing data and complete the auction view to settle.
-            const {
-              auctionDataExtended,
-              auctionManagersByAuction,
-              safetyDepositBoxesByVaultAndIndex,
-              metadataByMint,
-              bidderMetadataByAuctionAndBidder:
-                updatedBidderMetadataByAuctionAndBidder,
-              bidderPotsByAuctionAndBidder,
-              bidRedemptionV2sByAuctionManagerAndWinningIndex,
-              masterEditions,
-              vaults,
-              safetyDepositConfigsByAuctionManagerAndIndex,
-              masterEditionsByPrintingMint,
-              masterEditionsByOneTimeAuthMint,
-              metadataByMasterEdition,
-              metadataByAuction,
-            } = await pullAuctionPage(auctionView.auction.pubkey);
-            const completeAuctionView = processAccountsIntoAuctionView(
-              auctionView.auction.pubkey,
-              auctionView.auction,
-              auctionDataExtended,
-              auctionManagersByAuction,
-              safetyDepositBoxesByVaultAndIndex,
-              metadataByMint,
-              updatedBidderMetadataByAuctionAndBidder,
-              bidderPotsByAuctionAndBidder,
-              bidRedemptionV2sByAuctionManagerAndWinningIndex,
-              masterEditions,
-              vaults,
-              safetyDepositConfigsByAuctionManagerAndIndex,
-              masterEditionsByPrintingMint,
-              masterEditionsByOneTimeAuthMint,
-              metadataByMasterEdition,
-              {},
-              metadataByAuction,
-              undefined,
+            await settle(
+              connection,
+              wallet,
+              auctionView,
+              // Just claim all bidder pots
+              bidsToClaim,
+              myPayingAccount?.pubkey,
+              accountByMint,
             );
-            if(completeAuctionView) {
-              await settle(
-                connection,
-                wallet,
-                completeAuctionView,
-                // Just claim all bidder pots
-                bidsToClaim,
-                myPayingAccount?.pubkey,
-                accountByMint,
-              );
-              if (wallet.publicKey) {
-                const ata = await getPersonalEscrowAta(wallet);
-                if (ata) await closePersonalEscrow(connection, wallet, ata);
-              }
+            if (wallet.publicKey) {
+              const ata = await getPersonalEscrowAta(wallet);
+              if (ata) await closePersonalEscrow(connection, wallet, ata);
             }
           } catch (e) {
             console.error(e);
