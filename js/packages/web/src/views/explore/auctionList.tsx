@@ -1,5 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Col, Layout, Row, Tabs } from 'antd';
+import { Col, Empty, Layout, Row, Tabs } from 'antd';
 import BN from 'bn.js';
 import React, { useMemo, useState } from 'react';
 import Masonry from 'react-masonry-css';
@@ -112,18 +112,19 @@ export const AuctionListView = () => {
       columnClassName="my-masonry-grid_column"
     >
       {!isLoading
-        ? items.map((m, idx) => {
-            if (m === heroAuction) {
-              return;
-            }
+        ?
+        items.map((m, idx) => {
+          // if (m === heroAuction) {
+          //   return;
+          // }
 
-            const id = m.auction.pubkey;
-            return (
-              <Link to={`/auction/${id}`} key={idx}>
-                <AuctionRenderCard key={id} auctionView={m} />
-              </Link>
-            );
-          })
+          const id = m.auction.pubkey;
+          return (
+            <Link to={`/auction/${id}`} key={idx}>
+              <AuctionRenderCard key={id} auctionView={m} />
+            </Link>
+          );
+        })
         : [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
     </Masonry>
   );
@@ -135,24 +136,24 @@ export const AuctionListView = () => {
     >
       {!isLoading
         ? auctionsEnded.map((m, idx) => {
-            if (m === heroAuction) {
-              return;
-            }
+          if (m === heroAuction) {
+            return;
+          }
 
-            const id = m.auction.pubkey;
-            return (
-              <Link to={`/auction/${id}`} key={idx}>
-                <AuctionRenderCard key={id} auctionView={m} />
-              </Link>
-            );
-          })
+          const id = m.auction.pubkey;
+          return (
+            <Link to={`/auction/${id}`} key={idx}>
+              <AuctionRenderCard key={id} auctionView={m} />
+            </Link>
+          );
+        })
         : [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
     </Masonry>
   );
 
   return (
     <>
-      <PreSaleBanner auction={heroAuction} />
+      {/* <PreSaleBanner auction={heroAuction} /> */}
       <Layout>
         <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Col style={{ width: '100%', marginTop: 10 }}>
@@ -166,7 +167,9 @@ export const AuctionListView = () => {
                     tab={<span className="tab-title">Live Auctions</span>}
                     key={LiveAuctionViewState.All}
                   >
-                    {liveAuctionsView}
+                    {liveAuctions.length > 0
+                      ? liveAuctionsView
+                      : <Empty description='Stay tuned for our next auction'></Empty>}
                   </TabPane>
                   {auctionsEnded.length > 0 && (
                     <TabPane

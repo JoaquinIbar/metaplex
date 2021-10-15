@@ -16,10 +16,10 @@ export const HomeView = () => {
       <Content>
         <Row>
           <Col>
-            <video class="desktop-video" playsInline autoPlay muted loop>
+            <video className="desktop-video" playsInline autoPlay muted loop>
               <source src="https://github.com/JoaquinIbar/solmoments/raw/master/js/packages/web/public/videos/remember-solmoments.mp4" type='video/mp4;' />
             </video>
-            <video class="mobile-video" playsInline autoPlay muted loop>
+            <video className="mobile-video" playsInline autoPlay muted loop>
               <source src="https://github.com/JoaquinIbar/solmoments/raw/master/js/packages/web/public/videos/remember-solmoments-mobile.mp4" type='video/mp4;' />
             </video>
           </Col>
@@ -28,4 +28,3 @@ export const HomeView = () => {
     </Layout>
   );
 };
-
